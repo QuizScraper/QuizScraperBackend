@@ -5,6 +5,13 @@ import requests
 from flask import Flask, Response
 app = Flask(__name__)
 
+#if call in server and entry comes up then print table
+#else:
+    #raws = url_for(local_host/ping/user_strg)
+    #quest, ansr = url_for(local_host/pars/raws)
+    #call data base and implement quest,ansr to user_strg keys, name object
+    #return quiz cards or simple preset of questions
+
 @app.route('/parse/<string:file>')
 def quizzer_pars(file):
     reference = set(string.punctuation)
@@ -24,8 +31,9 @@ def quizzer_pars(file):
         if "?" in phrase:
             medium = phrase.slice("?")
             pos_ques = medium[0]
-            medium = medium.remove(pos_ques)
-            ultimatum[pos_ques] = str(medium)
+            ultimatum[pos_ques] = medium.remove(pos_ques)
+            #medium = medium.remove(pos_ques)
+            #ultimatum[pos_ques] = str(medium)
         else:
             ultimatum[phrase] = 'determination'
     return str(ultimatum)
