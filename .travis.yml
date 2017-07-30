@@ -1,0 +1,11 @@
+language: python
+
+notifications:
+  email: false
+
+before_deploy:
+  pip install flask
+  pip install zappa
+
+deploy:
+   zappa update
