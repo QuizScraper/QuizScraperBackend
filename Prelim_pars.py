@@ -4,6 +4,7 @@ import string
 import requests
 import spacy
 from flask import jsonify
+from collections import OrderedDict
 
 from flask import Flask, Response
 app = Flask(__name__)
@@ -15,11 +16,12 @@ app = Flask(__name__)
     #call data base and implement quest,ansr to user_strg keys, name object
     #return quiz cards or simple preset of questions
 
-@app.route('/p/')
-def parse():
-    json_data = requests.get("https://tzylobx763.execute-api.us-east-1.amazonaws.com/dev/ping/Albert%20Einstein").content
+@app.route('/p/<article_name>')
+def parse(subject):
+    parse_url = "https://tzylobx763.execute-api.us-east-1.amazonaws.com/dev/ping/" + article_name
+    data = requests.get(parse_url).content
     en_nlp = spacy.load('en')
-    doc = en_nlp(json.loads(json_data)['query']['pages'][0])
+    doc = en_nlp(data)
     res = ' '
     for sent in list(doc.sents):
         res = res + "{" + str(sent) + '}<br/> '
@@ -56,7 +58,9 @@ def quizzer_pars(file):
 def ping(article_name):
     #api_url = 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=' + article_name + '&redirects=&prop=wikitext'
     api_url = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&prop=extracts&&titles=' + str(article_name)
-    return requests.get(api_url).content
+    req = json.loads(requests.get(api_url).content, object_pairs_hook=OrderedDict)
+    first = next(iter(req['query']['pages'].values()))
+    return first['extract']
 
 @app.route('/test-spacey/')
 def test():
