@@ -11,8 +11,6 @@ from collections import OrderedDict
 from flask import Flask, Response
 app = Flask(__name__)
 
-en_nlp = spacy.load('en')
-
 #if call in server and entry comes up then print table
 #else:
     #raws = url_for(local_host/ping/user_strg)
@@ -71,16 +69,17 @@ def ping(article_name):
 @app.route('/parse_sentence/<sentence>')
 def parse_sentence(sentence):
     string = str(sentence).decode('utf8', errors='replace')
+    en_nlp = spacy.load('en')
     doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
-    res = 'Input sentence: ' + string + ' <br/><br/>'
-    for i in range(0, len(list(doc))):
-        res = res + "{" + str(doc[i].text) + ", " + str(en_nlp.vocab.strings[doc[i].tag]) + '} '
+    res = 'Input sentence: ' + string + ' <br/>'
+    #for i in range(0, len(list(doc))):
+    #    res = res + "{" + str(doc[i].text) + ", " + str(en_nlp.vocab.strings[doc[i].tag]) + '} '
     #res = res + str(doc[i].text) + ', ' + str(doc[i].ent_iob) + ', ' + doc[i].ent_type_ + '\n'
 
     if(str(en_nlp.vocab.strings[doc[0].tag]) == "NNP"):
         if(str(en_nlp.vocab.strings[doc[1].tag]) == "NNP"):
             if(str(en_nlp.vocab.strings[doc[2].tag]) == "VBD"):
-                res = res + "<br /> <br /> Who "
+                res = res + "<br /> Who "
                 if(str(doc[len(list(doc))-1]) == '.'):
                     for i in range(2, len(list(doc))-1):
                         res = res + str(doc[i].text) + " "
