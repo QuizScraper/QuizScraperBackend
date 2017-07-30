@@ -3,10 +3,9 @@ notifications:
   email: false
 install:
   pip install flask && pip install zappa
+before_script:
+  python credentials.py
 script:
-   import subprocess
-   subprocess.call(['chmod', '0777', './credentials.sh'])
-   subprocess.call('./credentials.sh')
    zappa update
 env:
   global:
