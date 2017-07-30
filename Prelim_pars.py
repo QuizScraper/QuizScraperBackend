@@ -22,7 +22,7 @@ app = Flask(__name__)
 def parse(article_name):
     parse_url = "http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/ping/" + article_name
     data = requests.get(parse_url).content
-    en_nlp = spacy.load('en')
+    en_nlp = spacy.load('en', parser=False)
     doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
     for sent in list(doc.sents):
@@ -69,7 +69,7 @@ def ping(article_name):
 @app.route('/parse_sentence/<sentence>')
 def parse_sentence(sentence):
     string = str(sentence).decode('utf8', errors='replace')
-    en_nlp = spacy.load('en')
+    en_nlp = spacy.load('en', parser=False)
     doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
     res = 'Input sentence: ' + string + ' <br/>'
     #for i in range(0, len(list(doc))):
