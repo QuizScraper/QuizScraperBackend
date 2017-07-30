@@ -4,7 +4,10 @@ notifications:
 install:
   pip install flask && pip install zappa
 before_script:
-  python credentials.py
+  aws config
+  ${AWS_ACCESS_KEY_ID}
+  ${AWS_SECRET_ACCESS_KEY}
+  us-west-1
 script:
    zappa update
 env:
