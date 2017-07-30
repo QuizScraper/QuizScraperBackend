@@ -11,6 +11,8 @@ from collections import OrderedDict
 from flask import Flask, Response
 app = Flask(__name__)
 
+en_nlp = spacy.load('en')
+
 #if call in server and entry comes up then print table
 #else:
     #raws = url_for(local_host/ping/user_strg)
@@ -22,7 +24,6 @@ app = Flask(__name__)
 def parse(article_name):
     parse_url = "http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/ping/" + article_name
     data = requests.get(parse_url).content
-    en_nlp = spacy.load('en')
     doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
     for sent in list(doc.sents):
@@ -68,10 +69,9 @@ def ping(article_name):
 
 @app.route('/parse_sentence/<sentence>')
 def parse_sentence(sentence):
-    en_nlp = spacy.load('en')
     string = str(sentence).decode('utf8', errors='replace')
     doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
-    res = 'Input sentnce: ' + string + ' <br/><br/>'
+    res = 'Input sentence: ' + string + ' <br/><br/>'
     for i in range(0, len(list(doc))):
         res = res + "{" + str(doc[i].text) + ", " + str(en_nlp.vocab.strings[doc[i].tag]) + '} '
     #res = res + str(doc[i].text) + ', ' + str(doc[i].ent_iob) + ', ' + doc[i].ent_type_ + '\n'
