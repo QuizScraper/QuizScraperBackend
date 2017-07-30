@@ -4,7 +4,7 @@ notifications:
 install:
   pip install flask && pip install zappa && pip install awscli
 before_script:
-  aws config
+  aws configure
   ${AWS_ACCESS_KEY_ID}
   ${AWS_SECRET_ACCESS_KEY}
   us-west-1
