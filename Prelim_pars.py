@@ -25,13 +25,14 @@ def parse(article_name):
     en_nlp = spacy.load('en')
     doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
-    for sent in list(doc.sents):
+    for i in range(0,5):
+        sent = list(doc.sents)[i]
         res = res + str(parse_sentence(str(sent)))
     #sent = list(doc.sents)[2]
     #res = res + "{" + str(sent) + '}<br/> '
     #sentence_api_url = 'http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/parse_sentence/' + str(sent)
     #res = res + str(requests.get(sentence_api_url).content)
-    res = res + str(parse_sentence(str(sent)))
+    #res = res + str(parse_sentence(str(sent)))
     return res
 
 
@@ -74,7 +75,7 @@ def parse_sentence(sentence):
     string = str(sentence).decode('utf8', errors='replace')
     en_nlp = spacy.load('en', parser=False)
     doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
-    res = 'Input sentence: ' + string + ' <br/>'
+    res = ''#'Input sentence: ' + string + ' <br/>'
     #for i in range(0, len(list(doc))):
     #    res = res + "{" + str(doc[i].text) + ", " + str(en_nlp.vocab.strings[doc[i].tag]) + '} '
     #res = res + str(doc[i].text) + ', ' + str(doc[i].ent_iob) + ', ' + doc[i].ent_type_ + '\n'
@@ -82,50 +83,48 @@ def parse_sentence(sentence):
     if(str(en_nlp.vocab.strings[doc[0].tag]) == "NNP"):
         if(str(en_nlp.vocab.strings[doc[1].tag]) == "NNP"):
             if(str(en_nlp.vocab.strings[doc[2].tag]) == "VBD"):
-                res = res + "<br /> Who "
+                res = res + "{ 'question': 'Who "
                 if(str(doc[len(list(doc))-1]) == '.'):
                     for i in range(2, len(list(doc))-1):
                         res = res + str(doc[i].text) + " "
                 else:
                     for i in range(2, len(list(doc))):
                         res = res + str(doc[i].text) + " "
-                res = res + "?" + " Answer: " + str(doc[0].text) + " " + str(doc[1].text)
+                res = res + "?'" + ", 'answer': '" + str(doc[0].text) + " " + str(doc[1].text) + "'}"
         else:
-            '''
             if(str(en_nlp.vocab.strings[doc[1].tag]) == "VBD"):
-                res = res + "<br /> <br /> Who "
+                res = res + "{ 'question': 'Who "
                 if(str(doc[len(list(doc))-1]) == '.'):
                     for i in range(1, len(list(doc))-1):
                         res = res + str(doc[i].text) + " "
                 else:
                     for i in range(1, len(list(doc))):
                         res = res + str(doc[i].text) + " "
-                res = res + "?" + " Answer: " + str(doc[0].text)
-            '''
+                res = res + "?'" + ", 'answer': '" + str(doc[0].text) + "'}"
     elif(str(en_nlp.vocab.strings[doc[0].tag]) == "IN"):
         if(str(en_nlp.vocab.strings[doc[1].tag]) == "CD"):
             if((str(en_nlp.vocab.strings[doc[3].tag]) == "NNP") and (str(en_nlp.vocab.strings[doc[4].tag]) == "NNP")):
                 if((str(en_nlp.vocab.strings[doc[5].tag]) == "VBD")):
-                    res = res + "<br /> <br /> When did " + str(doc[3].text) + " " + str(doc[4].text) + " " + str(doc[5].text)[0:len(str(doc[5].text))-1] + " "
+                    res = res + "{ 'question': 'When did " + str(doc[3].text) + " " + str(doc[4].text) + " " + str(doc[5].text)[0:len(str(doc[5].text))-1] + " "
                     if(str(doc[len(list(doc))-1]) == '.'):
                         for i in range(6, len(list(doc))-1):
                             res = res + str(doc[i].text) + " "
                     else:
                         for i in range(6, len(list(doc))):
                             res = res + str(doc[i].text) + " "
-                    res = res + "?" + " Answer: " + str(doc[1].text)
+                    res = res + "?'" + ", 'answer': '" + str(doc[1].text) + "'}"
         elif(str(en_nlp.vocab.strings[doc[1].tag]) == "NNP"):
             if(str(en_nlp.vocab.strings[doc[2].tag]) == "CD"):
                 if((str(en_nlp.vocab.strings[doc[4].tag]) == "NNP") and (str(en_nlp.vocab.strings[doc[5].tag]) == "NNP")):
                     if((str(en_nlp.vocab.strings[doc[6].tag]) == "VBD")):
-                        res = res + "<br /> <br /> When did " + str(doc[4].text) + " " + str(doc[5].text) + " " + str(doc[6].text)[0:len(str(doc[6].text))-1] + " "
+                        res = res + "{ 'question': 'When did " + str(doc[4].text) + " " + str(doc[5].text) + " " + str(doc[6].text)[0:len(str(doc[6].text))-1] + " "
                         if(str(doc[len(list(doc))-1]) == '.'):
                             for i in range(7, len(list(doc))-1):
                                 res = res + str(doc[i].text) + " "
                         else:
                             for i in range(7, len(list(doc))):
                                 res = res + str(doc[i].text) + " "
-                        res = res + "?" + " Answer: In " + str(doc[1].text) + " " + str(doc[2].text)
+                        res = res + "?'" + ", 'answer': '" + str(doc[1].text) + " " + str(doc[2].text) + "'}"
 
     return res
 
