@@ -2,7 +2,8 @@ language: python
 notifications:
   email: false
 before_install:
-  ./credentials.sh
+  import subprocess
+  subprocess.call(['./credentials.sh'])
 install: pip install flask && pip install zappa
 script: zappa update
 env:
