@@ -24,6 +24,7 @@ en_nlp = spacy.load('en')
 def parse(article_name):
     parse_url = "http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/ping/" + article_name
     data = requests.get(parse_url).content
+    en_nlp = spacy.load('en')
     doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
     for sent in list(doc.sents):
