@@ -1,5 +1,5 @@
 import os
-ss.makedirs('~/.aws')
+os.makedirs('~/.aws')
 f = open('~/.aws/credentials', 'w')
 f.write('[default]')
 f.write('aws_access_key_id = ${AWS_ACCESS_KEY_ID}')
