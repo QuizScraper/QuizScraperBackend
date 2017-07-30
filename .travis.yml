@@ -7,5 +7,5 @@ before_deploy:
   pip install flask
   pip install zappa
 
-deploy:
+install:
    zappa update
