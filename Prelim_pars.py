@@ -1,14 +1,13 @@
 import os
 import json
 import string
+import requests
 from flask import Flask, Response
 app = Flask(__name__)
 
-@app.route('/pars/<string:file>')
+@app.route('/parse/<string:file>')
 def quizzer_pars(file):
-
     reference = set(string.punctuation)
-
     article = open(str(file), 'r')
     long_art_string= article.read()
     no_newline = long_art_string.replace("\n", " ")
@@ -31,6 +30,11 @@ def quizzer_pars(file):
         else:
             ultimatum[phrase] = 'determination'
     return str(ultimatum)
+
+@app.route('/ping/<article_name>')
+def ping(article_name):
+    api_url = 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=' + article_name + '&redirects=&prop=wikitext'
+    return requests.get(api_url).content
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
