@@ -2,7 +2,7 @@ language: python
 notifications:
   email: false
 before_install:
-  execfile('./credentials.sh')
+  python call_credentials.py
 install: pip install flask && pip install zappa
 script: zappa update
 env:
