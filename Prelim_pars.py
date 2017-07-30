@@ -1,13 +1,14 @@
-from flask import Flask
+import os
+import json
+import string
+from flask import Flask, Response
 app = Flask(__name__)
 
 @app.route('/pars/<string:file>')
-
 def quizzer_pars(file):
-    import string
+
     reference = set(string.punctuation)
-    import os
-    import scipy
+
     article = open(str(file), 'r')
     long_art_string= article.read()
     no_newline = long_art_string.replace("\n", " ")
@@ -30,3 +31,7 @@ def quizzer_pars(file):
         else:
             ultimatum[phrase] = 'determination'
     return str(ultimatum)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
