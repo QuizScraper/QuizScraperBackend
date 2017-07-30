@@ -19,14 +19,16 @@ app = Flask(__name__)
     #return quiz cards or simple preset of questions
 
 @app.route('/p/<article_name>')
-def parse(subject):
-    parse_url = "https://tzylobx763.execute-api.us-east-1.amazonaws.com/dev/ping/" + article_name
+def parse(article_name):
+    parse_url = "http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/ping/" + article_name
     data = requests.get(parse_url).content
     en_nlp = spacy.load('en')
-    doc = en_nlp(data)
+    doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
     for sent in list(doc.sents):
-        res = res + "{" + str(sent) + '}<br/> '
+        #res = res + "{" + str(sent) + '}<br/> '
+        sentence_api_url = 'http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/parse_sentence/' + str(sent)
+        res = res + str(requests.get(sentence_api_url).content)
     return res
 
 
@@ -64,10 +66,10 @@ def ping(article_name):
     first = next(iter(req['query']['pages'].values()))
     return first['extract']
 
-@app.route('/parse_sentence/')
-def parse_sentence():
+@app.route('/parse_sentence/<sentence>')
+def parse_sentence(sentence):
     en_nlp = spacy.load('en')
-    string = str("In December 2015, Elon Musk announced the creation of OpenAI, a not-for-profit artificial intelligence (AI) research company.").decode('utf8', errors='replace')
+    string = str(sentence).decode('utf8', errors='replace')
     doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
     res = 'Input sentnce: ' + string + ' <br/><br/>'
     for i in range(0, len(list(doc))):
