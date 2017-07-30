@@ -3,9 +3,9 @@ language: python
 notifications:
   email: false
 
-before_deploy:
+install:
   pip install flask
   pip install zappa
 
-install:
+deploy:
    zappa update
