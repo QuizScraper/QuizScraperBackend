@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import os
 import json
 import string
@@ -62,15 +64,64 @@ def ping(article_name):
     first = next(iter(req['query']['pages'].values()))
     return first['extract']
 
-@app.route('/test-spacey/')
-def test():
+@app.route('/parse_sentence/')
+def parse_sentence():
     en_nlp = spacy.load('en')
-    doc = en_nlp(u'He gave up looking for fully generally covariant tensor equations, and searched for equations that would be invariant under general linear transformations only.')
-    res = ''
-    i = 0
-    for val in doc:
-        res = res + str(doc[i].text) + ', ' + str(doc[i].ent_iob) + ', ' + doc[i].ent_type_ + '\n'
-        i += 1
+    string = str("In December 2015, Elon Musk announced the creation of OpenAI, a not-for-profit artificial intelligence (AI) research company.").decode('utf8', errors='replace')
+    doc = en_nlp(unicode(''.join((c for c in string if ord(c) < 128))))
+    res = 'Input sentnce: ' + string + ' <br/><br/>'
+    for i in range(0, len(list(doc))):
+        res = res + "{" + str(doc[i].text) + ", " + str(en_nlp.vocab.strings[doc[i].tag]) + '} '
+    #res = res + str(doc[i].text) + ', ' + str(doc[i].ent_iob) + ', ' + doc[i].ent_type_ + '\n'
+
+    if(str(en_nlp.vocab.strings[doc[0].tag]) == "NNP"):
+        if(str(en_nlp.vocab.strings[doc[1].tag]) == "NNP"):
+            if(str(en_nlp.vocab.strings[doc[2].tag]) == "VBD"):
+                res = res + "<br /> <br /> Who "
+                if(str(doc[len(list(doc))-1]) == '.'):
+                    for i in range(2, len(list(doc))-1):
+                        res = res + str(doc[i].text) + " "
+                else:
+                    for i in range(2, len(list(doc))):
+                        res = res + str(doc[i].text) + " "
+                res = res + "?" + " Answer: " + str(doc[0].text) + " " + str(doc[1].text)
+        else:
+            '''
+            if(str(en_nlp.vocab.strings[doc[1].tag]) == "VBD"):
+                res = res + "<br /> <br /> Who "
+                if(str(doc[len(list(doc))-1]) == '.'):
+                    for i in range(1, len(list(doc))-1):
+                        res = res + str(doc[i].text) + " "
+                else:
+                    for i in range(1, len(list(doc))):
+                        res = res + str(doc[i].text) + " "
+                res = res + "?" + " Answer: " + str(doc[0].text)
+            '''
+    elif(str(en_nlp.vocab.strings[doc[0].tag]) == "IN"):
+        if(str(en_nlp.vocab.strings[doc[1].tag]) == "CD"):
+            if((str(en_nlp.vocab.strings[doc[3].tag]) == "NNP") and (str(en_nlp.vocab.strings[doc[4].tag]) == "NNP")):
+                if((str(en_nlp.vocab.strings[doc[5].tag]) == "VBD")):
+                    res = res + "<br /> <br /> When did " + str(doc[3].text) + " " + str(doc[4].text) + " " + str(doc[5].text)[0:len(str(doc[5].text))-1] + " "
+                    if(str(doc[len(list(doc))-1]) == '.'):
+                        for i in range(6, len(list(doc))-1):
+                            res = res + str(doc[i].text) + " "
+                    else:
+                        for i in range(6, len(list(doc))):
+                            res = res + str(doc[i].text) + " "
+                    res = res + "?" + " Answer: " + str(doc[1].text)
+        elif(str(en_nlp.vocab.strings[doc[1].tag]) == "NNP"):
+            if(str(en_nlp.vocab.strings[doc[2].tag]) == "CD"):
+                if((str(en_nlp.vocab.strings[doc[4].tag]) == "NNP") and (str(en_nlp.vocab.strings[doc[5].tag]) == "NNP")):
+                    if((str(en_nlp.vocab.strings[doc[6].tag]) == "VBD")):
+                        res = res + "<br /> <br /> When did " + str(doc[4].text) + " " + str(doc[5].text) + " " + str(doc[6].text)[0:len(str(doc[6].text))-1] + " "
+                        if(str(doc[len(list(doc))-1]) == '.'):
+                            for i in range(7, len(list(doc))-1):
+                                res = res + str(doc[i].text) + " "
+                        else:
+                            for i in range(7, len(list(doc))):
+                                res = res + str(doc[i].text) + " "
+                        res = res + "?" + " Answer: In " + str(doc[1].text) + " " + str(doc[2].text)
+
     return res
 
 if __name__ == '__main__':
