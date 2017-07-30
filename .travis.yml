@@ -2,7 +2,7 @@ language: python
 notifications:
   email: false
 install:
-  pip install flask && pip install zappa
+  pip install flask && pip install zappa && pip install awscli
 before_script:
   aws config
   ${AWS_ACCESS_KEY_ID}
