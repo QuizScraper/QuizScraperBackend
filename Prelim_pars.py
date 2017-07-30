@@ -3,8 +3,7 @@ import json
 import string
 import requests
 import spacy
-import json
-from spacy.attrs import ENT_IOB, ENT_TYPE
+from flask import jsonify
 
 from flask import Flask, Response
 app = Flask(__name__)
@@ -20,7 +19,7 @@ app = Flask(__name__)
 def parse():
     json_data = requests.get("https://tzylobx763.execute-api.us-east-1.amazonaws.com/dev/ping/Albert%20Einstein").content
     en_nlp = spacy.load('en')
-    doc = en_nlp(json.loads(json_data)['query']['pages'][0]['extract'])
+    doc = en_nlp(json.loads(json_data)['query']['pages'][0])
     res = ' '
     for sent in list(doc.sents):
         res = res + "{" + str(sent) + '}<br/> '
@@ -56,7 +55,7 @@ def quizzer_pars(file):
 @app.route('/ping/<article_name>')
 def ping(article_name):
     #api_url = 'https://en.wikipedia.org/w/api.php?action=parse&format=json&page=' + article_name + '&redirects=&prop=wikitext'
-    api_url = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&prop=extracts&&titles=' + article_name
+    api_url = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&prop=extracts&&titles=' + str(article_name)
     return requests.get(api_url).content
 
 @app.route('/test-spacey/')
