@@ -4,8 +4,7 @@ notifications:
   email: false
 
 install:
-  pip install flask
-  pip install zappa
+  pip install flask && pip install zappa
 
 script:
    zappa update
