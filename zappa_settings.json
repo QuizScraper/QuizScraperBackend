@@ -1,8 +1,8 @@
 {
     "dev": {
-        "app_function": "Prelim_pars.app", 
-        "aws_region": "us-east-1", 
-        "profile_name": "default", 
+        "app_function": "Prelim_pars.app",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
         "s3_bucket": "zappa-r4xog7h97"
     }
 }
