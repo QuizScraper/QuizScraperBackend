@@ -26,9 +26,12 @@ def parse(article_name):
     doc = en_nlp(unicode(''.join((c for c in data if ord(c) < 128))))
     res = ' '
     for sent in list(doc.sents):
-        #res = res + "{" + str(sent) + '}<br/> '
-        sentence_api_url = 'http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/parse_sentence/' + str(sent)
-        res = res + str(requests.get(sentence_api_url).content)
+        res = res + str(parse_sentence(str(sent)))
+    #sent = list(doc.sents)[2]
+    #res = res + "{" + str(sent) + '}<br/> '
+    #sentence_api_url = 'http://ec2-52-206-34-202.compute-1.amazonaws.com:5000/parse_sentence/' + str(sent)
+    #res = res + str(requests.get(sentence_api_url).content)
+    res = res + str(parse_sentence(str(sent)))
     return res
 
 
