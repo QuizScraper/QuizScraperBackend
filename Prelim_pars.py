@@ -8,8 +8,7 @@ app = Flask(__name__)
 @app.route('/parse/<string:file>')
 def quizzer_pars(file):
     reference = set(string.punctuation)
-    article = open(str(file), 'r')
-    long_art_string= article.read()
+    long_art_string= file
     no_newline = long_art_string.replace("\n", " ")
     if "!" in no_newline:
         no_sent_punct = no_newline.split("!")
