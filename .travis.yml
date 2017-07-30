@@ -7,5 +7,5 @@ install:
   pip install flask
   pip install zappa
 
-deploy:
+script:
    zappa update
