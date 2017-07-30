@@ -1,8 +1,8 @@
 language: python
 notifications:
   email: false
-install: pip install flask && pip install zappa
-before_script:
+install:
+  pip install flask && pip install zappa
   python call_credentials.py
 script: zappa update
 env:
